@@ -5,6 +5,7 @@
 #include <Guid/FileInfo.h>
 
 #include "Test.h"
+#include "kernel/frame_buffer_config.hpp"
 
 EFI_STATUS GetMemoryMap(struct MemoryMap* map){
     if(map->buffer == NULL){
@@ -154,11 +155,33 @@ EFI_STATUS EFIAPI UefiMain(EFI_HANDLE image_handle, EFI_SYSTEM_TABLE* system_tab
             while(1)__asm__("hlt");
         }
     }
+    struct FrameBuffer_config conf = {
+        (char*)gop->Mode->FrameBufferBase,
+        gop->Mode->Info->PixelsPerScanLine,
+        gop->Mode->Info->HorizontalResolution,
+        gop->Mode->Info->VerticalResolution,
+        0 
+    };
+    switch (gop->Mode->Info->PixelFormat)
+    {
+    case PixelRedGreenBlueReserved8BitPerColor:
+        conf.pixel_format = PixelRGB8bitPerColor;
+        break;
+    case PixelBlueGreenRedReserved8BitPerColor:
+        conf.pixel_format = PixelBGR8bitPerColor;
+        break;
+    default:
+        Print("Unimplemented pixel format: %d\n nanikore!\\(^o^)/\n", gop->Mode->Info->PixelFormat);
+        Halt();
+        break;
+    }
+
+
     //カーネル実行　ただの関数だけどね…
     UINT64 kernel_function_addr = *(UINT64*)(kernel_base_addr + 24);
-    typedef void KernelMain(UINT64, UINT64);
+    typedef void KernelMain(UINT64);
     KernelMain* kernel = (KernelMain*)kernel_function_addr;
-    kernel(gop->Mode->FrameBufferBase, gop->Mode->FrameBufferSize);
+    kernel((UINT64)&conf);
     while (1)__asm__("hlt");
     return 0;
 }

@@ -1,6 +1,7 @@
 {
     "files.associations": {
         "uefi.h": "c",
-        "uefispec.h": "c"
+        "uefispec.h": "c",
+        "cstdint": "cpp"
     }
 }
