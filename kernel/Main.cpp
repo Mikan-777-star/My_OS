@@ -53,18 +53,22 @@ PixelWriter* pixel_writer;
 extern "C" void kernelMain(uint64_t framebuffer_config_point)
 {
     const struct FrameBuffer_config* conf = reinterpret_cast<const struct FrameBuffer_config*>(framebuffer_config_point);
-    sizeof(conf);
 
     switch (conf->pixel_format)
     {
-   case PixelBGR8bitPerColor:
-       pixel_writer = new(pixel_writer_buf)BGRPixelWriter{conf};
-       break;
-   case PixelRGB8bitPerColor:
-        pixel_writer = new(pixel_writer_buf)RGBPixelWriter{conf};
-        break;   
+        case PixelBGR8bitPerColor:
+            pixel_writer = new(pixel_writer_buf)BGRPixelWriter{conf};
+            break;
+        case PixelRGB8bitPerColor:
+            pixel_writer = new(pixel_writer_buf)RGBPixelWriter{conf};
+            break;   
     }
-    
+    const struct Pixel_Color pixel = {10, 20, 254};
+    for(int x = 10; x < 110; x++){
+        for(int y = 10; y < 110; y++){
+            pixel_writer->Write(x, y, &pixel);
+        }
+    }
     while (1)
     {
         __asm__("hlt");
