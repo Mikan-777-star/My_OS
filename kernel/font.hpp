@@ -1,3 +1,4 @@
 #include "graphics.hpp"
 
-void writeA_cons(PixelWriter* writer, int x, int y, Pixel_Color* c);
+void write_char(PixelWriter* writer,int x, int y, char c);
+void WriteString(PixelWriter* writer, int x, int y, const char* s);
