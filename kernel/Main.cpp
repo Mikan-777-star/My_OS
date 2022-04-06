@@ -1,50 +1,33 @@
 #include <cstdint>
 
 #include "frame_buffer_config.hpp"
+#include "graphics.hpp"
 
 void* operator new(unsigned long size, void* buf){
     return buf;
 }
 void operator delete(void* obj){};
 
-struct Pixel_Color{
-    uint8_t red, green, blue;
-};
 
-class PixelWriter
-{
-private:
-    const struct FrameBuffer_config* _config;
-public:
-    PixelWriter(const struct FrameBuffer_config* config):_config{config}{};
-    virtual ~PixelWriter() = default;
-    virtual void Write(int x, int y, const struct Pixel_Color* c) = 0;
-protected:
-    uint8_t* PixelAt(int x, int y){
-        return reinterpret_cast<uint8_t*>(_config->framebuffer + (4 * (_config->pixels_per_scan_line * y + x)));
-    }
-};
 
-class RGBPixelWriter : public PixelWriter{
-    public:
-    using PixelWriter::PixelWriter;
-    virtual void Write(int x, int y, const struct Pixel_Color* c) override{
-        auto p = PixelAt(x, y);
-        p[0] = c->red;
-        p[1] = c->green;
-        p[2] = c->blue;
-    }
-};
 
-class BGRPixelWriter : public PixelWriter{
-    public:
-    using PixelWriter::PixelWriter;
-    virtual void Write(int x, int y, const struct Pixel_Color* c) override{
-        auto p = PixelAt(x, y);
-        p[2] = c->red;
-        p[1] = c->green;
-        p[0] = c->blue;
-    }
+const uint8_t kFontA[16]{
+    0b00000000,
+    0b00011000,
+    0b00011000,
+    0b00011000,
+    0b00011000,
+    0b00100100,
+    0b00100100,
+    0b00100100,
+    0b00100100,
+    0b01111110,
+    0b01000010,
+    0b01000010,
+    0b01000010,
+    0b11100111,
+    0b00000000,
+    0b00000000
 };
 
 char pixel_writer_buf[sizeof(RGBPixelWriter)];
