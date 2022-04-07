@@ -257,9 +257,9 @@ EFI_STATUS EFIAPI UefiMain(EFI_HANDLE image_handle, EFI_SYSTEM_TABLE* system_tab
         break;
     }
 
-    typedef void kernel(UINT64 FrameBuffer_config_point);
+    typedef void kernel(UINT64 FrameBuffer_config_point, UINT64 memory_map_point);
     kernel* kernel_entry = (kernel*)entry_addr;
-    kernel_entry((UINT64)&conf);
+    kernel_entry((UINT64)&conf, (UINT64)&memmap);
     
     while (1)__asm__("hlt");
     return 0;

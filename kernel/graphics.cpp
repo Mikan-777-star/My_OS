@@ -18,3 +18,7 @@ void RGBPixelWriter::Write(int x, int y, const struct Pixel_Color* c){
     p[1] = c->green;
     p[2] = c->blue;
 }
+
+const struct FrameBuffer_config* PixelWriter::getConf(){
+    return _config;
+}

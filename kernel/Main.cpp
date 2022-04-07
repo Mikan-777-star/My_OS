@@ -3,6 +3,7 @@
 #include "frame_buffer_config.hpp"
 #include "graphics.hpp"
 #include "font.hpp"
+#include "memory.hpp"
 
 void* operator new(unsigned long size, void* buf){
     return buf;
@@ -15,7 +16,7 @@ void operator delete(void* obj){};
 char pixel_writer_buf[sizeof(RGBPixelWriter)];
 PixelWriter* pixel_writer;
 
-extern "C" void kernelMain(uint64_t framebuffer_config_point)
+extern "C" void kernelMain(uint64_t framebuffer_config_point, uint64_t memory_map_pointer)
 {
     const struct FrameBuffer_config* conf = reinterpret_cast<const struct FrameBuffer_config*>(framebuffer_config_point);
 
