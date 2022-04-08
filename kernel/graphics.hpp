@@ -15,7 +15,6 @@ public:
     virtual ~PixelWriter() = default;
     virtual void Write(int x, int y, const struct Pixel_Color* c) = 0;
     const struct FrameBuffer_config* getConf();
-protected:
     uint8_t* PixelAt(int x, int y);
 };
 
